@@ -39,3 +39,32 @@ exports.jwtPassport=passport.use(new JwtStrategy(opts,(jwt_payload,done)=>{
 }));
 
 exports.verifyUser = passport.authenticate('jwt',{session:false});
+
+exports.verifyAdmin = (req, res, next) => {
+    if (req.user.admin) {
+      return next();
+    } else {
+      err = new Error("You are not authorized to perform this operation!");
+      err.status = 403;
+      return next(err);
+    }
+  };
+
+  exports.verifyOrdinaryUser = function(req, res, next) {
+    var token = req.body.token;
+    if (token) {
+      jwt.verify(token, config.sercetKey, function(err, decoded) {
+        if (err) {
+          var err = new Error('Not Authenticated');
+          err.status = 401;
+          return next(err);
+        }
+        req.decoded = decoded;
+        next();
+      });
+    } else {
+      var err = new Error('No token provided');
+      err.status = 403;
+      return next(err);
+    }
+  }
