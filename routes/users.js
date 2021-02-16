@@ -7,9 +7,9 @@ var router = express.Router();
 router.use(bodyParser.json());
 
 /* GET users listing. */
-User.route('/')
+// User.route('/')
 
-router.get(authenticate.verifyUser,authenticate.verifyAdmin,authenticate.verifyOrdinaryUser,(req, res, next)=> {
+router.get('/',authenticate.verifyUser,authenticate.verifyAdmin,authenticate.verifyOrdinaryUser,(req, res, next)=> {
   User.find({}).then((users)=>{
     res.statusCode=200;
     res.setHeader('Content-Type','application/json');
